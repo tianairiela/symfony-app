@@ -19,11 +19,17 @@ symfony-app/
 │   └── index.php             # Front controller
 ├── src/
 │   ├── Controller/
-│   │   └── HomeController.php
+│   │   ├── HomeController.php
+│   │   └── TaskController.php   # CRUD basique pour l'entité Task
+│   ├── Entity/
+│   │   └── Task.php              # Entité Doctrine d'exemple
+│   ├── Repository/
+│   │   └── TaskRepository.php
 │   └── Kernel.php
 ├── templates/
 │   ├── base.html.twig
-│   └── home/index.html.twig
+│   ├── home/index.html.twig
+│   └── task/index.html.twig      # Liste + formulaire d'ajout de tâches
 ├── .env                       # Variables d'environnement par défaut (non sensibles)
 ├── .gitignore
 └── composer.json
@@ -59,9 +65,10 @@ symfony-app/
    - Définir une vraie valeur pour `APP_SECRET` (ex. `openssl rand -hex 16`).
    - Adapter `DATABASE_URL` à votre base de données (MySQL, PostgreSQL ou SQLite).
 
-4. (Si vous utilisez Doctrine) Créer la base de données et lancer les migrations :
+4. Créer la base de données et générer/exécuter la migration de l'entité `Task` :
    ```bash
    php bin/console doctrine:database:create
+   php bin/console make:migration
    php bin/console doctrine:migrations:migrate
    ```
 
@@ -72,14 +79,40 @@ symfony-app/
    php -S localhost:8000 -t public
    ```
 
-6. Ouvrir [http://localhost:8000](http://localhost:8000) dans votre navigateur.
+6. Ouvrir [http://localhost:8000](http://localhost:8000) pour la page d'accueil, ou [http://localhost:8000/tasks](http://localhost:8000/tasks) pour gérer vos tâches en base de données.
+
+## 🗃️ Entité `Task`
+
+Une entité Doctrine simple est fournie pour commencer à travailler avec la base de données :
+
+| Champ | Type | Description |
+|---|---|---|
+| `id` | `int` | Identifiant auto-incrémenté |
+| `title` | `string` | Titre de la tâche (obligatoire) |
+| `description` | `string` (nullable) | Détail optionnel |
+| `isDone` | `bool` | Statut terminé / en cours (`false` par défaut) |
+| `createdAt` | `DateTimeImmutable` | Date de création (définie automatiquement) |
+
+La page `/tasks` permet de :
+- **Lister** les tâches (les plus récentes en premier) ;
+- **Ajouter** une tâche via un formulaire simple ;
+- **Basculer** son statut terminé / en cours ;
+- **Supprimer** une tâche.
+
+➡️ Pour modifier le schéma de la table `task`, éditez `src/Entity/Task.php`, puis régénérez une migration :
+```bash
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+```
 
 ## 🧰 Commandes utiles
 
 | Commande | Description |
 |---|---|
+| `php bin/console make:entity` | Générer une nouvelle entité Doctrine |
+| `php bin/console make:migration` | Générer une migration à partir des changements d'entités |
+| `php bin/console doctrine:migrations:migrate` | Appliquer les migrations en attente |
 | `php bin/console make:controller` | Générer un nouveau contrôleur (via Maker Bundle) |
-| `php bin/console make:entity` | Générer une entité Doctrine |
 | `php bin/console cache:clear` | Vider le cache de l'application |
 | `php bin/console debug:router` | Lister toutes les routes disponibles |
 
