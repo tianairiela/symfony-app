@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes tâches{% endblock %}
+
+{% block body %}
+    <main style="max-width:600px;margin:3rem auto;font-family:sans-serif;">
+        <h1>📋 Mes tâches</h1>
+
+        <form method="post" action="{{ path('task_create') }}" style="margin-bottom:2rem;display:flex;gap:0.5rem;">
+            <input type="text" name="title" placeholder="Titre de la tâche" required style="flex:1;padding:0.5rem;">
+            <input type="text" name="description" placeholder="Description (optionnel)" style="flex:1;padding:0.5rem;">
+            <button type="submit">Ajouter</button>
+        </form>
+
+        {% if tasks is empty %}
+            <p>Aucune tâche pour le moment.</p>
+        {% else %}
+            <ul style="list-style:none;padding:0;">
+                {% for task in tasks %}
+                    <li style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid #eee;">
+                        <form method="post" action="{{ path('task_toggle', { id: task.id }) }}">
+                            <button type="submit" title="Basculer le statut">
+                                {{ task.done ? '✅' : '⬜️' }}
+                            </button>
+                        </form>
+                        <span style="flex:1;{{ task.done ? 'text-decoration:line-through;color:#999;' : '' }}">
+                            <strong>{{ task.title }}</strong>
+                            {% if task.description %}<br><small>{{ task.description }}</small>{% endif %}
+                        </span>
+                        <form method="post" action="{{ path('task_delete', { id: task.id }) }}" onsubmit="return confirm('Supprimer cette tâche ?');">
+                            <button type="submit">✕</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </main>
+{% endblock %}
