@@ -6,7 +6,7 @@ composer install
 
 php bin/console cache:clear
 
-php bin/console doctrine:database:create --if-not-exists --no-interaction
+#php bin/console doctrine:database:create --if-not-exists --no-interaction
 
 # Applique les migrations que le dépôt porte : sur une base vide, elles construisent le schéma
 php bin/console doctrine:migrations:migrate --no-interaction
