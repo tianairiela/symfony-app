@@ -21,6 +21,6 @@ php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migratio
 php bin/console doctrine:migrations:diff --no-interaction --allow-empty-diff
 php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
-if [ "$EVA_ENVIRONMENT" = preprod ]; then
+if [ "$EVA_ENVIRONMENT" = feat ]; then
   php bin/console doctrine:fixtures:load --no-interaction
 fi
