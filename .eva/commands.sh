@@ -2,8 +2,6 @@
 # Lancé par deploy.sh dans le dossier déployé, avec bash -e : tout s'arrête à la première erreur.
 # EVA_ENVIRONMENT vaut prod ou preprod. EVA_COMMIT et EVA_BRANCH sont aussi disponibles.
 
-
-
 composer install 
 
 php bin/console cache:clear
