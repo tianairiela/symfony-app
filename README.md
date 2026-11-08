@@ -6,6 +6,7 @@ Projet **Symfony 7.1** (profil "webapp") : Twig, Doctrine ORM/DBAL, Security, Ma
 
 ## 🗂️ Structure du projet
 
+
 ```
 symfony-app/
 ├── bin/
