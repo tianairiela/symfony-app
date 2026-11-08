@@ -56,10 +56,6 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ github.token }}'
         run: 'if [ -f "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" ]; then printf ''%s\n'' "$GITHUB_TOKEN" "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" "$GITHUB_SHA" | bash "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" production; else echo "~/deployment/dri-hebergement.com/scripts/deploy.sh absent sur $(hostname) : connectez-vous au serveur depuis EVA Pilote, rien n''est déployé." >&2; exit 1; fi'
-      - name: 'Install composer'
-        run: 'cd "$EVA_DEPLOYED_DIR" && composer install'
-      - name: 'Created DB'
-        run: 'php bin/console doctrine:database:create --if-not-exists --no-interaction'
       - *custom-commands
             
   remove-preview:
