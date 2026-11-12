@@ -7,26 +7,8 @@ name: 'Build and deploy tianairiela/symfony-app'
 permissions:
   contents: read
 jobs:
-  _definitions:
-    if: false
-    runs-on: &runner
-      - self-hosted
-      - dri/hebergement
-    steps:
-      - &custom-commands
-        name: 'Commandes du projet'
-        run: |-
-          cd "$EVA_DEPLOYED_DIR"
-          composer install
-          php bin/console cache:clear
-          php bin/console doctrine:database:create --if-not-exists --no-interaction
-          php bin/console make:migration --no-interaction
-          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-          php bin/console doctrine:migrations:diff --no-interaction --allow-empty-diff
-          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-
   preview:
-    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name != 'main'"
+    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name != 'feat'"
     runs-on:
       - self-hosted
       - tianairiela/symfony-app
@@ -38,13 +20,22 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ github.token }}'
         run: 'if [ -f "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" ]; then printf ''%s\n'' "$GITHUB_TOKEN" "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" "$GITHUB_SHA" | bash "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" preview; else echo "~/deployment/dri-hebergement.com/scripts/deploy.sh absent sur $(hostname) : connectez-vous au serveur depuis EVA Pilote, rien n''est déployé." >&2; exit 1; fi'
-      - *custom-commands
+      - name: 'Commandes du projet'
+        run: |-
+          cd "$EVA_DEPLOYED_DIR"
+          composer install
+          php bin/console cache:clear
+          php bin/console doctrine:database:create --if-not-exists --no-interaction
+          php bin/console make:migration --no-interaction
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+          php bin/console doctrine:migrations:diff --no-interaction --allow-empty-diff
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
       - name: 'Load fixtures'
         run: |-
           cd "$EVA_DEPLOYED_DIR"
           php bin/console doctrine:fixtures:load --append --no-interaction
   production:
-    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name == 'main'"
+    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name == 'feat'"
     runs-on:
       - self-hosted
       - tianairiela/symfony-app
@@ -56,8 +47,16 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ github.token }}'
         run: 'if [ -f "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" ]; then printf ''%s\n'' "$GITHUB_TOKEN" "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" "$GITHUB_SHA" | bash "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" production; else echo "~/deployment/dri-hebergement.com/scripts/deploy.sh absent sur $(hostname) : connectez-vous au serveur depuis EVA Pilote, rien n''est déployé." >&2; exit 1; fi'
-      - *custom-commands
-            
+      - name: 'Commandes du projet'
+        run: |-
+          cd "$EVA_DEPLOYED_DIR"
+          composer install
+          php bin/console cache:clear
+          php bin/console doctrine:database:create --if-not-exists --no-interaction
+          php bin/console make:migration --no-interaction
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+          php bin/console doctrine:migrations:diff --no-interaction --allow-empty-diff
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
   remove-preview:
     if: "github.event_name == 'delete' && github.event.ref_type == 'branch'"
     runs-on:
@@ -71,3 +70,19 @@ jobs:
         env:
           DELETED_BRANCH: '${{ github.event.ref }}'
         run: 'if [ -f "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" ]; then printf ''%s\n'' "" "$GITHUB_REPOSITORY" "$DELETED_BRANCH" "" | bash "$HOME/deployment/dri-hebergement.com/scripts/deploy.sh" remove-preview; else echo "~/deployment/dri-hebergement.com/scripts/deploy.sh absent sur $(hostname) : connectez-vous au serveur depuis EVA Pilote, rien n''est déployé." >&2; exit 1; fi'
+  _definitions:
+    if: false
+    runs-on:
+      - self-hosted
+      - dri/hebergement
+    steps:
+      - name: 'Commandes du projet'
+        run: |-
+          cd "$EVA_DEPLOYED_DIR"
+          composer install
+          php bin/console cache:clear
+          php bin/console doctrine:database:create --if-not-exists --no-interaction
+          php bin/console make:migration --no-interaction
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+          php bin/console doctrine:migrations:diff --no-interaction --allow-empty-diff
+          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
