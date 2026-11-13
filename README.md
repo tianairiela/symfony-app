@@ -4,7 +4,7 @@ Projet **Symfony 7.1** (profil "webapp") : Twig, Doctrine ORM/DBAL, Security, Ma
 
 > ⚠️ Cette structure a été générée manuellement (fichiers de configuration standards d'un projet Symfony Flex). Le dossier `vendor/` n'est pas versionné : il faut exécuter `composer install` pour installer les dépendances avant de démarrer le projet.
 
-## 🗂️ Structure du projet.
+## 🗂️ Structure du projet.fdqf
 
 
 
