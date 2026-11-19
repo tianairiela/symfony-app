@@ -26,7 +26,7 @@ jobs:
           php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
   preview:
-    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name != 'main'"
+    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name != 'feat'"
     runs-on:
       - self-hosted
       - tianairiela/symfony-app
@@ -42,7 +42,7 @@ jobs:
       - name: 'Load fixtures'
         run: php bin/console doctrine:fixtures:load --append --no-interaction
   production:
-    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name == 'main'"
+    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name == 'feat'"
     runs-on:
       - self-hosted
       - tianairiela/symfony-app
