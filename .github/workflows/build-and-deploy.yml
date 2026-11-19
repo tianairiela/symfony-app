@@ -8,7 +8,7 @@ permissions:
   contents: read
 jobs:
   preview:
-    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name != 'feat'"
+    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name != 'main'"
     runs-on:
       - self-hosted
       - tianairiela/symfony-app
@@ -35,7 +35,7 @@ jobs:
           cd "$EVA_DEPLOYED_DIR"
           php bin/console doctrine:fixtures:load --append --no-interaction
   production:
-    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name == 'feat'"
+    if: "github.event_name == 'push' && !github.event.deleted && github.ref_name == 'main'"
     runs-on:
       - self-hosted
       - tianairiela/symfony-app
